@@ -74,7 +74,8 @@ enum dvar {
 
 uint16_t  v_forward;
 uint16_t  v_reflected;
-uint8_t   v_timer_enable;
+uint8_t   v_timer_enable @0x0a;
+uint8_t volatile flag @0x0b;
 uint16_t  v_timer_value;
 uint8_t   v_timer_range;
 

@@ -9,7 +9,7 @@
 #include <xc.h>
 #include "fpaoptions.h"
 
-uint8_t volatile flag;
+
 void main(void) {
     flag=1;
     default_config();
