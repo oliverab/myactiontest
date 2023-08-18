@@ -23,6 +23,9 @@ void init_uart(void) {
 
 void main(void) {
     init_uart();
+    printf("\n");
+    printf("XC8 compiler version %.2f\n", __XC8_VERSION / 1000.0f);
+
     printf("Setting flag\n");
     flag=1;
     printf("Flag is %i\n",flag);
