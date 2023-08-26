@@ -32,6 +32,7 @@ void main(void) {
     printf("calling \"default_config()\"\n");  
     default_config();
     printf("Flag is %i\n",flag);
+/*
     printf("Setting flag\n");
     flag=1;
     printf("Trying a char pointer write\n");
@@ -45,7 +46,7 @@ void main(void) {
     vptr=&v_timer_enable;
     *(byteptr)vptr=1;
     printf("Flag is %i\n",flag);
-
+*/
     _delay(1000);
     while(1);
     return;
