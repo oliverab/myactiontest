@@ -43,20 +43,14 @@ typedef int16_t *intptr;
 typedef struct {
   char text[11];
   void * ptr;
-  uint16_t maxvalue;
   enum dvar type;
   uint16_t defvalue;
 } optionstruct;
-// by making optioncount a typed constant it can be defined in a module
-// and shared using extern with the important caveat that "sizeof" appears to
-// only be valid after the array is initialised
 const optionstruct opts[]= {
-// Menu option table
-// Name      Variable name limits           param type  default value
 //                                                          flags
-"Timer    :",&v_timer_enable,0x0002 , dvenum,      0,
-"Time Set :",&v_timer_value, 100    , dvnumber,   50,
-"Time Range",&v_timer_range, 0x0a02 , dvenum,      0,
+"Timer    :",&v_timer_enable, dvenum,      0,
+"Time Set :",&v_timer_value,  dvnumber,  500,
+"Time Range",&v_timer_range,  dvenum,      0,
 };
 
 const uint8_t optioncount=sizeof(opts) / sizeof(optionstruct); //45
@@ -70,6 +64,26 @@ void main(void) {
 
     printf("Setting flag\n");
     flag=1;
+    v_timer_value=0;
+    printf("Flag is %i\n",flag);
+    printf("Running suspect code\n");  
+    for( aa=0; aa < optioncount; aa++) {
+      switch (opts[aa].type) {
+          case dvenum:
+          *((byteptr)opts[aa].ptr) = opts[aa].defvalue;
+          break;
+          case dvnumber:
+          *((wordptr)opts[aa].ptr) = opts[aa].defvalue;
+          break;
+
+    };
+  };
+    printf("Flag (expect 1) is %i\n",flag);
+    printf("Timer value (expect 500) is %i\n",v_timer_value);
+
+    printf("Setting flag\n");
+    flag=1;
+    v_timer_value=0;
     printf("Flag is %i\n",flag);
     printf("Running suspect code\n");  
     for( aa=0; aa < optioncount; aa++) {
@@ -83,21 +97,8 @@ void main(void) {
 
     };
   };
-    printf("Flag is %i\n",flag);
-
-    printf("Setting flag\n");
-    flag=1;
-    printf("Trying a char pointer write\n");
-    volatile unsigned char * ptr;
-    ptr=&v_timer_enable;
-    *ptr=1;
-    printf("Flag is %i\n",flag);
-    flag=1;
-    printf("Trying a void pointer write\n");
-    volatile void * vptr;
-    vptr=&v_timer_enable;
-    *(byteptr)vptr=1;
-    printf("Flag is %i\n",flag);
+    printf("Flag (expect 1) is %i\n",flag);
+    printf("Timer value (expect 500) is %i\n",v_timer_value);
 
     _delay(1000);
     while(1);
