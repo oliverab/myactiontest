@@ -5,27 +5,35 @@
  * Created on 12 August 2023, 16:31
  */
 
-#ifdef __XC8
-#include <xc.h>
-#endif
-#include <stdio.h>
-#include <stddef.h>
-#include <stdint.h>
 
 #ifdef __XC8
+#include <xc.h>
 void putch(char data) {
     while( ! PIR1bits.TXIF)          // wait until the transmitter is ready
         continue;
     TXREG = data;                     // send one character
 }
 
-void init_uart(void) {
+void init_test(void) {
     TXSTAbits.TXEN = 1;               // enable transmitter
     RCSTAbits.SPEN = 1;               // enable serial port
 }
+void end_test(void) {
+    _delay(1000);
+    while(1);
+}
+#define report_compiler() printf("XC8 compiler version %.2f\n", __XC8_VERSION / 1000.0f)
 #else
-#define init_uart(X)
+#define init_test(X)
+#define end_test(X)
+#define report_compiler() printf("Non-XC8 compiler\n")
 #endif
+
+#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
+
+
 
 enum dvar {
   dvnumber   =1,       // 2 byte value that will be stored to eeprom
@@ -70,13 +78,9 @@ const uint8_t optioncount=sizeof(opts) / sizeof(optionstruct); //45
 
 void main(void) {
     uint8_t aa;
-    init_uart();
+    init_test();
     printf("\n");
-#ifdef __XC8
-    printf("XC8 compiler version %.2f\n", __XC8_VERSION / 1000.0f);
-#else
-    printf("Non-XC8 compiler\n");
-#endif    
+    report_compiler();
     printf("Setting flag\n");
     v.flag=1;
     v_timer_value=0;
@@ -114,9 +118,6 @@ void main(void) {
   };
     printf("Flag (expect 1) is %i\n",v.flag);
     printf("Timer value (expect 500) is %i\n",v_timer_value);
-#ifdef __XC8
-    _delay(1000);
-    while(1);
-#endif    
+    end_test();
     return;
 }
