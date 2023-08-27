@@ -5,30 +5,7 @@
  * Created on 12 August 2023, 16:31
  */
 
-
-#ifdef __XC8
-#include <xc.h>
-void putch(char data) {
-    while( ! PIR1bits.TXIF)          // wait until the transmitter is ready
-        continue;
-    TXREG = data;                     // send one character
-}
-
-void init_test(void) {
-    TXSTAbits.TXEN = 1;               // enable transmitter
-    RCSTAbits.SPEN = 1;               // enable serial port
-}
-void end_test(void) {
-    _delay(1000);
-    while(1);
-}
-#define report_compiler() printf("XC8 compiler version %.2f\n", __XC8_VERSION / 1000.0f)
-#else
-#define init_test(X)
-#define end_test(X)
-#define report_compiler() printf("Non-XC8 compiler\n")
-#endif
-
+#include "test_tool.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
